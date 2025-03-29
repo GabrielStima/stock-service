@@ -1,22 +1,22 @@
 const database = require("../../db/models");
 const authentication = require("../utils/authentication");
-const productValidator = require("../validators/productValidator");
+const storeValidator = require("../validators/storeValidator");
 
 module.exports = (app) => {
   const controller = {};
 
-  controller.listProducts = async (req, res) => {
+  controller.listStores = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
       return res.status(401).send("Unauthorized");
     }
 
-    const list = await database.Product.findAll();
+    const list = await database.Store.findAll();
 
     return res.status(200).json(list);
   };
-  controller.findProduct = async (req, res) => {
+  controller.findStore = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
@@ -24,62 +24,58 @@ module.exports = (app) => {
     }
 
     const { id } = req.params;
-    const product = await database.Product.findByPk(id);
+    const store = await database.Store.findByPk(id);
 
-    if (!product) {
-      return res.status(404).send("Product not found");
+    if (!store) {
+      return res.status(404).send("Store not found");
     }
 
-    return res.status(200).json(product);
+    return res.status(200).json(store);
   };
-  controller.createProduct = async (req, res) => {
+  controller.createStore = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
       return res.status(401).send("Unauthorized");
     }
 
-    const { error, value } = productValidator.createProduct.validate(req.body);
+    const { error, value } = storeValidator.createStore.validate(req.body);
 
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { name, description, price, stock_id, store_id } = value;
+    const { name, address, owner_id } = value;
 
-    const user = await database.Product.create({
+    const store = await database.Store.create({
       name,
-      description,
-      price,
-      stock_id,
-      store_id,
+      address,
+      owner_id,
     });
 
-    return res.status(201).json(user);
+    return res.status(201).json(store);
   };
-  controller.updateProduct = async (req, res) => {
+  controller.updateStore = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
       return res.status(401).send("Unauthorized");
     }
 
-    const { error, value } = productValidator.updateProduct.validate(req.body);
+    const { error, value } = storeValidator.updateStore.validate(req.body);
 
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
 
     const { id } = req.params;
-    const { name, description, price, stock_id, store_id } = value;
+    const { name, address, owner_id } = value;
 
-    const updateProduct = await database.Product.update(
+    const updateStore = await database.Store.update(
       {
         name,
-        description,
-        price,
-        stock_id,
-        store_id,
+        address,
+        owner_id,
       },
       {
         where: {
@@ -88,13 +84,13 @@ module.exports = (app) => {
       }
     );
 
-    if (updateProduct[0] === 0) {
-      return res.status(404).send("Product not found");
+    if (updateStore[0] === 0) {
+      return res.status(404).send("Store not found");
     }
 
-    return res.status(200).send("Product updated successfully");
+    return res.status(200).send("Store updated successfully");
   };
-  controller.deleteProduct = async (req, res) => {
+  controller.deleteStore = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
@@ -103,7 +99,7 @@ module.exports = (app) => {
 
     const { id } = req.params;
 
-    await database.Product.destroy({
+    await database.Store.destroy({
       where: {
         id: id,
       },

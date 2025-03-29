@@ -1,22 +1,23 @@
 const database = require("../../db/models");
 const authentication = require("../utils/authentication");
-const productValidator = require("../validators/productValidator");
+const stockValidator = require("../validators/stockValidator");
 
 module.exports = (app) => {
   const controller = {};
 
-  controller.listProducts = async (req, res) => {
+  controller.listStocks = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
       return res.status(401).send("Unauthorized");
     }
 
-    const list = await database.Product.findAll();
+    const list = await database.Stock.findAll();
 
     return res.status(200).json(list);
   };
-  controller.findProduct = async (req, res) => {
+
+  controller.findStock = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
@@ -24,62 +25,60 @@ module.exports = (app) => {
     }
 
     const { id } = req.params;
-    const product = await database.Product.findByPk(id);
+    const stock = await database.Stock.findByPk(id);
 
-    if (!product) {
-      return res.status(404).send("Product not found");
+    if (!stock) {
+      return res.status(404).send("Stock not found");
     }
 
-    return res.status(200).json(product);
+    return res.status(200).json(stock);
   };
-  controller.createProduct = async (req, res) => {
+
+  controller.createStock = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
       return res.status(401).send("Unauthorized");
     }
 
-    const { error, value } = productValidator.createProduct.validate(req.body);
+    const { error, value } = stockValidator.createStock.validate(req.body);
 
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { name, description, price, stock_id, store_id } = value;
+    const { product_id, store_id, quantity } = value;
 
-    const user = await database.Product.create({
-      name,
-      description,
-      price,
-      stock_id,
+    const stock = await database.Stock.create({
+      product_id,
       store_id,
+      quantity,
     });
 
-    return res.status(201).json(user);
+    return res.status(201).json(stock);
   };
-  controller.updateProduct = async (req, res) => {
+
+  controller.updateStock = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
       return res.status(401).send("Unauthorized");
     }
 
-    const { error, value } = productValidator.updateProduct.validate(req.body);
+    const { error, value } = stockValidator.updateStock.validate(req.body);
 
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
 
     const { id } = req.params;
-    const { name, description, price, stock_id, store_id } = value;
+    const { product_id, store_id, quantity } = value;
 
-    const updateProduct = await database.Product.update(
+    const updateStock = await database.Stock.update(
       {
-        name,
-        description,
-        price,
-        stock_id,
+        product_id,
         store_id,
+        quantity,
       },
       {
         where: {
@@ -88,13 +87,14 @@ module.exports = (app) => {
       }
     );
 
-    if (updateProduct[0] === 0) {
-      return res.status(404).send("Product not found");
+    if (updateStock[0] === 0) {
+      return res.status(404).send("Stock not found");
     }
 
-    return res.status(200).send("Product updated successfully");
+    return res.status(200).send("Stock updated successfully");
   };
-  controller.deleteProduct = async (req, res) => {
+
+  controller.deleteStock = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
@@ -103,13 +103,13 @@ module.exports = (app) => {
 
     const { id } = req.params;
 
-    await database.Product.destroy({
+    await database.Stock.destroy({
       where: {
         id: id,
       },
     });
 
-    return res.status(204).send("");
+    return res.status(200).send("Stock deleted successfully");
   };
 
   return controller;

@@ -1,22 +1,23 @@
 const database = require("../../db/models");
+const cryptography = require("../utils/cryptography");
 const authentication = require("../utils/authentication");
-const productValidator = require("../validators/productValidator");
+const userValidator = require("../validators/userValidator");
 
 module.exports = (app) => {
   const controller = {};
 
-  controller.listProducts = async (req, res) => {
+  controller.listUsers = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
       return res.status(401).send("Unauthorized");
     }
 
-    const list = await database.Product.findAll();
+    const list = await database.User.findAll();
 
     return res.status(200).json(list);
   };
-  controller.findProduct = async (req, res) => {
+  controller.findUser = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
@@ -24,61 +25,64 @@ module.exports = (app) => {
     }
 
     const { id } = req.params;
-    const product = await database.Product.findByPk(id);
+    const user = await database.User.findByPk(id);
 
-    if (!product) {
-      return res.status(404).send("Product not found");
+    if (!user) {
+      return res.status(404).send("User not found");
     }
 
-    return res.status(200).json(product);
+    return res.status(200).json(user);
   };
-  controller.createProduct = async (req, res) => {
+  controller.createUser = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
       return res.status(401).send("Unauthorized");
     }
 
-    const { error, value } = productValidator.createProduct.validate(req.body);
+    const { error, value } = userValidator.createUser.validate(req.body);
 
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { name, description, price, stock_id, store_id } = value;
+    const { first_name, last_name, email, password, role, store_id } = value;
+    const cryptPassword = cryptography.createHash(password);
 
-    const user = await database.Product.create({
-      name,
-      description,
-      price,
-      stock_id,
+    const user = await database.User.create({
+      first_name,
+      last_name,
+      email,
+      password: cryptPassword,
+      role,
       store_id,
     });
 
     return res.status(201).json(user);
   };
-  controller.updateProduct = async (req, res) => {
+  controller.updateUser = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
       return res.status(401).send("Unauthorized");
     }
 
-    const { error, value } = productValidator.updateProduct.validate(req.body);
+    const { error, value } = userValidator.updateUser.validate(req.body);
 
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
 
     const { id } = req.params;
-    const { name, description, price, stock_id, store_id } = value;
+    const { first_name, last_name, email, password, role, store_id } = value;
 
-    const updateProduct = await database.Product.update(
+    const updateUser = await database.User.update(
       {
-        name,
-        description,
-        price,
-        stock_id,
+        first_name,
+        last_name,
+        email,
+        password,
+        role,
         store_id,
       },
       {
@@ -88,13 +92,13 @@ module.exports = (app) => {
       }
     );
 
-    if (updateProduct[0] === 0) {
-      return res.status(404).send("Product not found");
+    if (updateUser[0] === 0) {
+      return res.status(404).send("User not found");
     }
 
-    return res.status(200).send("Product updated successfully");
+    return res.status(200).send("User updated successfully");
   };
-  controller.deleteProduct = async (req, res) => {
+  controller.deleteUser = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
     if (!validate) {
@@ -103,7 +107,7 @@ module.exports = (app) => {
 
     const { id } = req.params;
 
-    await database.Product.destroy({
+    await database.User.destroy({
       where: {
         id: id,
       },
