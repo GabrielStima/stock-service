@@ -6,12 +6,6 @@ module.exports = (app) => {
   const controller = {};
 
   controller.listStocks = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const list = await database.Stock.findAll({
       include: [
         {
@@ -28,12 +22,6 @@ module.exports = (app) => {
     return res.status(200).json(list);
   };
   controller.listStocksByProductId = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { product_id } = req.params;
     const list = await database.Stock.findAll({
       where: {
@@ -44,12 +32,6 @@ module.exports = (app) => {
     return res.status(200).json(list);
   };
   controller.listStocksByStoreId = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { store_id } = req.params;
     const list = await database.Stock.findAll({
       where: {
@@ -60,12 +42,6 @@ module.exports = (app) => {
     return res.status(200).json(list);
   };
   controller.findStock = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { id } = req.params;
     const stock = await database.Stock.findByPk(id);
 
@@ -76,12 +52,6 @@ module.exports = (app) => {
     return res.status(200).json(stock);
   };
   controller.createStock = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { error, value } = stockValidator.createStock.validate(req.body);
 
     if (error) {
@@ -99,12 +69,6 @@ module.exports = (app) => {
     return res.status(201).json(stock);
   };
   controller.updateStock = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { error, value } = stockValidator.updateStock.validate(req.body);
 
     if (error) {
@@ -134,12 +98,6 @@ module.exports = (app) => {
     return res.status(200).send("Stock updated successfully");
   };
   controller.deleteStock = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { id } = req.params;
 
     await database.Stock.destroy({

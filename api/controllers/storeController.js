@@ -6,12 +6,6 @@ module.exports = (app) => {
   const controller = {};
 
   controller.listStores = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const list = await database.Store.findAll({
       include: [
         {
@@ -25,12 +19,6 @@ module.exports = (app) => {
     return res.status(200).json(list);
   };
   controller.findStore = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { id } = req.params;
     const store = await database.Store.findOne({
       where: {
@@ -52,12 +40,6 @@ module.exports = (app) => {
     return res.status(200).json(store);
   };
   controller.createStore = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { error, value } = storeValidator.createStore.validate(req.body);
 
     if (error) {
@@ -75,12 +57,6 @@ module.exports = (app) => {
     return res.status(201).json(store);
   };
   controller.updateStore = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { error, value } = storeValidator.updateStore.validate(req.body);
 
     if (error) {
@@ -110,12 +86,6 @@ module.exports = (app) => {
     return res.status(200).send("Store updated successfully");
   };
   controller.deleteStore = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { id } = req.params;
 
     await database.Store.destroy({

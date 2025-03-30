@@ -6,23 +6,11 @@ module.exports = (app) => {
   const controller = {};
 
   controller.listProducts = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const list = await database.Product.findAll();
 
     return res.status(200).json(list);
   };
   controller.findProduct = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { id } = req.params;
     const product = await database.Product.findByPk(id);
 
@@ -33,12 +21,6 @@ module.exports = (app) => {
     return res.status(200).json(product);
   };
   controller.createProduct = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { error, value } = productValidator.createProduct.validate(req.body);
 
     if (error) {
@@ -56,12 +38,6 @@ module.exports = (app) => {
     return res.status(201).json(user);
   };
   controller.updateProduct = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { error, value } = productValidator.updateProduct.validate(req.body);
 
     if (error) {
@@ -91,12 +67,6 @@ module.exports = (app) => {
     return res.status(200).send("Product updated successfully");
   };
   controller.deleteProduct = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { id } = req.params;
 
     await database.Product.destroy({

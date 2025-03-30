@@ -4,6 +4,7 @@ const config = require("config");
 const consign = require("consign");
 const cors = require("cors");
 const helmet = require("helmet");
+const hasAuth = require("../api/middlewares/hasAuth");
 
 module.exports = () => {
   const app = express();
@@ -14,6 +15,8 @@ module.exports = () => {
   app.use(bodyParser.json());
   app.use(cors());
   app.use(helmet());
+
+  app.use(hasAuth);
 
   consign({ cwd: "api" }).then("controllers").then("routes").into(app);
 

@@ -7,12 +7,6 @@ module.exports = (app) => {
   const controller = {};
 
   controller.listUsers = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const list = await database.User.findAll({
       attributes: { exclude: ["password"] },
       include: [
@@ -26,12 +20,6 @@ module.exports = (app) => {
     return res.status(200).json(list);
   };
   controller.listUsersByStore = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { store_id } = req.params;
     const list = await database.User.findAll({
       where: {
@@ -49,12 +37,6 @@ module.exports = (app) => {
     return res.status(200).json(list);
   };
   controller.findUser = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { id } = req.params;
     const user = await database.User.findOne({
       where: {
@@ -76,12 +58,6 @@ module.exports = (app) => {
     return res.status(200).json(user);
   };
   controller.createUser = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { error, value } = userValidator.createUser.validate(req.body);
 
     if (error) {
@@ -103,12 +79,6 @@ module.exports = (app) => {
     return res.status(201).json(user);
   };
   controller.updateUser = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { error, value } = userValidator.updateUser.validate(req.body);
 
     if (error) {
@@ -141,12 +111,6 @@ module.exports = (app) => {
     return res.status(200).send("User updated successfully");
   };
   controller.updateUserPassword = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { error, value } = userValidator.updateUserPassword.validate(
       req.body
     );
@@ -183,12 +147,6 @@ module.exports = (app) => {
     }
   };
   controller.deleteUser = async (req, res) => {
-    const validate = authentication.validateToken(req.headers["authorization"]);
-
-    if (!validate) {
-      return res.status(401).send("Unauthorized");
-    }
-
     const { id } = req.params;
 
     await database.User.destroy({
