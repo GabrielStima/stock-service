@@ -12,7 +12,15 @@ module.exports = (app) => {
       return res.status(401).send("Unauthorized");
     }
 
-    const list = await database.Store.findAll();
+    const list = await database.Store.findAll({
+      include: [
+        {
+          model: database.User,
+          required: true,
+          attributes: { exclude: ["password"] },
+        },
+      ],
+    });
 
     return res.status(200).json(list);
   };
@@ -24,7 +32,18 @@ module.exports = (app) => {
     }
 
     const { id } = req.params;
-    const store = await database.Store.findByPk(id);
+    const store = await database.Store.findOne({
+      where: {
+        id: id,
+      },
+      include: [
+        {
+          model: database.User,
+          required: true,
+          attributes: { exclude: ["password"] },
+        },
+      ],
+    });
 
     if (!store) {
       return res.status(404).send("Store not found");

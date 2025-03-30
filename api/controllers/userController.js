@@ -13,7 +13,38 @@ module.exports = (app) => {
       return res.status(401).send("Unauthorized");
     }
 
-    const list = await database.User.findAll();
+    const list = await database.User.findAll({
+      attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: database.Store,
+          required: true,
+        },
+      ],
+    });
+
+    return res.status(200).json(list);
+  };
+  controller.listUsersByStore = async (req, res) => {
+    const validate = authentication.validateToken(req.headers["authorization"]);
+
+    if (!validate) {
+      return res.status(401).send("Unauthorized");
+    }
+
+    const { store_id } = req.params;
+    const list = await database.User.findAll({
+      where: {
+        store_id: store_id,
+      },
+      attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: database.Store,
+          required: true,
+        },
+      ],
+    });
 
     return res.status(200).json(list);
   };
@@ -25,7 +56,18 @@ module.exports = (app) => {
     }
 
     const { id } = req.params;
-    const user = await database.User.findByPk(id);
+    const user = await database.User.findOne({
+      where: {
+        id: id,
+      },
+      attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: database.Store,
+          required: true,
+        },
+      ],
+    });
 
     if (!user) {
       return res.status(404).send("User not found");
@@ -97,6 +139,48 @@ module.exports = (app) => {
     }
 
     return res.status(200).send("User updated successfully");
+  };
+  controller.updateUserPassword = async (req, res) => {
+    const validate = authentication.validateToken(req.headers["authorization"]);
+
+    if (!validate) {
+      return res.status(401).send("Unauthorized");
+    }
+
+    const { error, value } = userValidator.updateUserPassword.validate(
+      req.body
+    );
+
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const { id } = req.params;
+    const { password, new_password } = value;
+
+    const user = await database.User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    if (await cryptography.comparePass(password, user.password)) {
+      user.password = cryptography.createHash(new_password);
+
+      try {
+        await user.save();
+
+        return res.status(200).send("Password updated successfully");
+      } catch (error) {
+        return res.status(400).json({
+          message: error,
+        });
+      }
+    } else {
+      return res.status(400).json({
+        message: "invalid data",
+      });
+    }
   };
   controller.deleteUser = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);

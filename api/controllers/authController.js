@@ -23,9 +23,13 @@ module.exports = (app) => {
     if (await cryptography.comparePass(password, user.password)) {
       return res.status(200).json({
         message: "login success",
-        token: jwt.sign({ id: user.id }, config.get("server.secret"), {
-          expiresIn: "1h",
-        }),
+        token: jwt.sign(
+          { id: user.id },
+          process.env.SECRET || config.get("server.secret"),
+          {
+            expiresIn: "1h",
+          }
+        ),
       });
     } else {
       return res.status(400).json({
@@ -33,7 +37,6 @@ module.exports = (app) => {
       });
     }
   };
-
   controller.validateToken = (req, res) => {
     const token = req.headers["authorization"];
 

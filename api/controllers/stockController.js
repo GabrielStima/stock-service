@@ -12,11 +12,53 @@ module.exports = (app) => {
       return res.status(401).send("Unauthorized");
     }
 
-    const list = await database.Stock.findAll();
+    const list = await database.Stock.findAll({
+      include: [
+        {
+          model: database.Product,
+          required: true,
+        },
+        {
+          model: database.Store,
+          required: true,
+        },
+      ],
+    });
 
     return res.status(200).json(list);
   };
+  controller.listStocksByProductId = async (req, res) => {
+    const validate = authentication.validateToken(req.headers["authorization"]);
 
+    if (!validate) {
+      return res.status(401).send("Unauthorized");
+    }
+
+    const { product_id } = req.params;
+    const list = await database.Stock.findAll({
+      where: {
+        product_id: product_id,
+      },
+    });
+
+    return res.status(200).json(list);
+  };
+  controller.listStocksByStoreId = async (req, res) => {
+    const validate = authentication.validateToken(req.headers["authorization"]);
+
+    if (!validate) {
+      return res.status(401).send("Unauthorized");
+    }
+
+    const { store_id } = req.params;
+    const list = await database.Stock.findAll({
+      where: {
+        store_id: store_id,
+      },
+    });
+
+    return res.status(200).json(list);
+  };
   controller.findStock = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
@@ -33,7 +75,6 @@ module.exports = (app) => {
 
     return res.status(200).json(stock);
   };
-
   controller.createStock = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
@@ -57,7 +98,6 @@ module.exports = (app) => {
 
     return res.status(201).json(stock);
   };
-
   controller.updateStock = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 
@@ -93,7 +133,6 @@ module.exports = (app) => {
 
     return res.status(200).send("Stock updated successfully");
   };
-
   controller.deleteStock = async (req, res) => {
     const validate = authentication.validateToken(req.headers["authorization"]);
 

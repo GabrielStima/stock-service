@@ -45,14 +45,12 @@ module.exports = (app) => {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { name, description, price, stock_id, store_id } = value;
+    const { name, description, price } = value;
 
     const user = await database.Product.create({
       name,
       description,
       price,
-      stock_id,
-      store_id,
     });
 
     return res.status(201).json(user);
@@ -71,15 +69,13 @@ module.exports = (app) => {
     }
 
     const { id } = req.params;
-    const { name, description, price, stock_id, store_id } = value;
+    const { name, description, price } = value;
 
     const updateProduct = await database.Product.update(
       {
         name,
         description,
         price,
-        stock_id,
-        store_id,
       },
       {
         where: {
