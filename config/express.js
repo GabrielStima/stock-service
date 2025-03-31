@@ -4,6 +4,9 @@ const config = require("config");
 const consign = require("consign");
 const cors = require("cors");
 const helmet = require("helmet");
+const swaggerUI = require("swagger-ui-express");
+
+const specs = require("./swagger");
 const hasAuth = require("../api/middlewares/hasAuth");
 
 module.exports = () => {
@@ -15,6 +18,7 @@ module.exports = () => {
   app.use(bodyParser.json());
   app.use(cors());
   app.use(helmet());
+  app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
   app.use(hasAuth);
 
