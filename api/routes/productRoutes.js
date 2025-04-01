@@ -5,60 +5,179 @@ module.exports = (app) => {
    * @swagger
    * tags:
    *   name: Product
-   *   description: Product routes
+   *   description: Product management operations
    */
+
   /**
    * @swagger
-   * /products:
+   * /api/v1/products:
    *   get:
-   *     description: List all products
+   *     summary: Retrieve all products
+   *     description: Get a list of all available products in the system
    *     tags: [Product]
-   *     produces:
-   *       - application/json
+   *     responses:
+   *       200:
+   *         description: A list of products
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/Product'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app.route("/api/v1/products").get(controller.listProducts);
 
   /**
    * @swagger
-   * /products/:id:
+   * /api/v1/product/{id}:
    *   get:
-   *     description: Find a product by ID
+   *     summary: Get product by ID
+   *     description: Retrieve detailed information about a specific product
    *     tags: [Product]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the product
+   *     responses:
+   *       200:
+   *         description: Detailed product information
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Product'
+   *       404:
+   *         $ref: '#/components/responses/NotFoundError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app.route("/api/v1/product/:id").get(controller.findProduct);
 
   /**
    * @swagger
-   * /product:
+   * /api/v1/product:
    *   post:
-   *     description: Create a new product
+   *     summary: Create product
+   *     description: Add a new product to the system
    *     tags: [Product]
-   *     produces:
-   *       - application/json
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - name
+   *               - price
+   *             properties:
+   *               name:
+   *                 type: string
+   *                 description: Product name
+   *               description:
+   *                 type: string
+   *                 description: Product description
+   *               price:
+   *                 type: number
+   *                 format: float
+   *                 description: Product price
+   *     responses:
+   *       201:
+   *         description: Product created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Product'
+   *       400:
+   *         $ref: '#/components/responses/ValidationError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app.route("/api/v1/product").post(controller.createProduct);
 
   /**
    * @swagger
-   * /product/:id:
+   * /api/v1/product/{id}:
    *   patch:
-   *     description: Update a product
+   *     summary: Update product
+   *     description: Update an existing product's information
    *     tags: [Product]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the product to update
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               name:
+   *                 type: string
+   *                 description: Product name
+   *               description:
+   *                 type: string
+   *                 description: Product description
+   *               price:
+   *                 type: number
+   *                 format: float
+   *                 description: Product price
+   *     responses:
+   *       200:
+   *         description: Product updated successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   example: Product updated successfully
+   *       400:
+   *         $ref: '#/components/responses/ValidationError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   *       404:
+   *         $ref: '#/components/responses/NotFoundError'
    */
   app.route("/api/v1/product/:id").patch(controller.updateProduct);
 
   /**
    * @swagger
-   * /product/:id:
+   * /api/v1/product/{id}:
    *   delete:
-   *     description: Delete a product
+   *     summary: Delete product
+   *     description: Remove a product from the system
    *     tags: [Product]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the product to delete
+   *     responses:
+   *       200:
+   *         description: Product deleted successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   example: Product deleted successfully
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   *       404:
+   *         $ref: '#/components/responses/NotFoundError'
    */
   app.route("/api/v1/product/:id").delete(controller.deleteProduct);
 };

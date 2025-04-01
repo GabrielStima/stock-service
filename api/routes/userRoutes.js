@@ -5,82 +5,271 @@ module.exports = (app) => {
    * @swagger
    * tags:
    *   name: User
-   *   description: User routes
+   *   description: User account management operations
    */
+
   /**
    * @swagger
-   * /users:
+   * /api/v1/users:
    *   get:
-   *     description: List all Users
+   *     summary: Retrieve all users
+   *     description: Get a list of all registered users in the system
    *     tags: [User]
-   *     produces:
-   *       - application/json
+   *     responses:
+   *       200:
+   *         description: A list of users
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/User'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app.route("/api/v1/users").get(controller.listUsers);
 
   /**
    * @swagger
-   * /users/:store_id:
+   * /api/v1/users/{store_id}:
    *   get:
-   *     description: List all Users by Store ID
+   *     summary: Get users by store
+   *     description: List all users associated with a specific store
    *     tags: [User]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: store_id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the store
+   *     responses:
+   *       200:
+   *         description: List of users for the specified store
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/User'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app.route("/api/v1/users/:store_id").get(controller.listUsersByStore);
 
   /**
    * @swagger
-   * /user/:id:
+   * /api/v1/user/{id}:
    *   get:
-   *     description: Find an Users by ID
+   *     summary: Get user by ID
+   *     description: Retrieve detailed information about a specific user
    *     tags: [User]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the user
+   *     responses:
+   *       200:
+   *         description: Detailed user information
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/User'
+   *       404:
+   *         $ref: '#/components/responses/NotFoundError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app.route("/api/v1/user/:id").get(controller.findUser);
 
   /**
    * @swagger
-   * /user:
+   * /api/v1/user:
    *   post:
-   *     description: Create an User
+   *     summary: Create user
+   *     description: Register a new user in the system
    *     tags: [User]
-   *     produces:
-   *       - application/json
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - name
+   *               - email
+   *               - password
+   *             properties:
+   *               name:
+   *                 type: string
+   *                 description: User's full name
+   *                 example: "John Doe"
+   *               email:
+   *                 type: string
+   *                 format: email
+   *                 description: User's email address
+   *                 example: "john@example.com"
+   *               password:
+   *                 type: string
+   *                 format: password
+   *                 description: User's password
+   *               role:
+   *                 type: string
+   *                 enum: [admin, manager, employee]
+   *                 description: User's role
+   *                 example: "manager"
+   *               store_id:
+   *                 type: integer
+   *                 description: ID of the store the user belongs to
+   *     responses:
+   *       201:
+   *         description: User created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/User'
+   *       400:
+   *         $ref: '#/components/responses/ValidationError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app.route("/api/v1/user").post(controller.createUser);
 
   /**
    * @swagger
-   * /user/:id:
+   * /api/v1/user/{id}:
    *   patch:
-   *     description: Update an User
+   *     summary: Update user
+   *     description: Update an existing user's information
    *     tags: [User]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the user to update
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               name:
+   *                 type: string
+   *                 description: User's full name
+   *               email:
+   *                 type: string
+   *                 format: email
+   *                 description: User's email address
+   *               role:
+   *                 type: string
+   *                 enum: [admin, manager, employee]
+   *                 description: User's role
+   *               store_id:
+   *                 type: integer
+   *                 description: ID of the store the user belongs to
+   *     responses:
+   *       200:
+   *         description: User updated successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/User'
+   *       400:
+   *         $ref: '#/components/responses/ValidationError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   *       404:
+   *         $ref: '#/components/responses/NotFoundError'
    */
   app.route("/api/v1/user/:id").patch(controller.updateUser);
 
   /**
    * @swagger
-   * /user/password/:id:
+   * /api/v1/user/password/{id}:
    *   patch:
-   *     description: Update an User password
+   *     summary: Update user password
+   *     description: Change a user's password
    *     tags: [User]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the user
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - currentPassword
+   *               - newPassword
+   *             properties:
+   *               currentPassword:
+   *                 type: string
+   *                 format: password
+   *                 description: Current password
+   *               newPassword:
+   *                 type: string
+   *                 format: password
+   *                 description: New password
+   *     responses:
+   *       200:
+   *         description: Password updated successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   example: Password updated successfully
+   *       400:
+   *         $ref: '#/components/responses/ValidationError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   *       404:
+   *         $ref: '#/components/responses/NotFoundError'
    */
   app.route("/api/v1/user/password/:id").patch(controller.updateUserPassword);
 
   /**
    * @swagger
-   * /user/:id:
+   * /api/v1/user/{id}:
    *   delete:
-   *     description: Delete an User
+   *     summary: Delete user
+   *     description: Remove a user from the system
    *     tags: [User]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the user to delete
+   *     responses:
+   *       200:
+   *         description: User deleted successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   example: User deleted successfully
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   *       404:
+   *         $ref: '#/components/responses/NotFoundError'
    */
   app.route("/api/v1/user/:id").delete(controller.deleteUser);
 };

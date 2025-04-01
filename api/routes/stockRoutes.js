@@ -5,27 +5,55 @@ module.exports = (app) => {
    * @swagger
    * tags:
    *   name: Stock
-   *   description: Stock routes
+   *   description: Stock inventory management operations
    */
+
   /**
    * @swagger
-   * /stocks:
+   * /api/v1/stocks:
    *   get:
-   *     description: List all stock registers
+   *     summary: Retrieve all stock items
+   *     description: Returns a list of all stock items across all stores with product and store details
    *     tags: [Stock]
-   *     produces:
-   *       - application/json
+   *     responses:
+   *       200:
+   *         description: A list of stock items
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/Stock'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app.route("/api/v1/stocks").get(controller.listStocks);
 
   /**
    * @swagger
-   * /stocks/product/:product_id:
+   * /api/v1/stocks/product/{product_id}:
    *   get:
-   *     description: List all stock registers by Product ID
+   *     summary: Get stock by product ID
+   *     description: Retrieves all stock entries for a specific product across all stores
    *     tags: [Stock]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: product_id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the product
+   *     responses:
+   *       200:
+   *         description: List of stock items for the specified product
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/Stock'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app
     .route("/api/v1/stocks/product/:product_id")
@@ -33,12 +61,29 @@ module.exports = (app) => {
 
   /**
    * @swagger
-   * /stocks/store/:store_id:
+   * /api/v1/stocks/store/{store_id}:
    *   get:
-   *     description: List all stock registers by Store ID
+   *     summary: Get stock by store ID
+   *     description: Retrieves all stock entries for a specific store
    *     tags: [Stock]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: store_id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the store
+   *     responses:
+   *       200:
+   *         description: List of stock items for the specified store
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/Stock'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app
     .route("/api/v1/stocks/store/:store_id")
@@ -46,45 +91,149 @@ module.exports = (app) => {
 
   /**
    * @swagger
-   * /stock/:id:
+   * /api/v1/stock/{id}:
    *   get:
-   *     description: Find a stock register by ID
+   *     summary: Get stock by ID
+   *     description: Retrieves a specific stock entry by its ID
    *     tags: [Stock]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the stock item
+   *     responses:
+   *       200:
+   *         description: Detailed stock item information
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Stock'
+   *       404:
+   *         $ref: '#/components/responses/NotFoundError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app.route("/api/v1/stock/:id").get(controller.findStock);
 
   /**
    * @swagger
-   * /stock:
+   * /api/v1/stock:
    *   post:
-   *     description: Create a stock register
+   *     summary: Create stock entry
+   *     description: Creates a new stock entry for a product at a specific store
    *     tags: [Stock]
-   *     produces:
-   *       - application/json
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - product_id
+   *               - quantity
+   *             properties:
+   *               product_id:
+   *                 type: integer
+   *                 description: ID of the product
+   *               store_id:
+   *                 type: integer
+   *                 description: ID of the store
+   *               quantity:
+   *                 type: integer
+   *                 description: Stock quantity
+   *     responses:
+   *       201:
+   *         description: Stock created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Stock'
+   *       400:
+   *         $ref: '#/components/responses/ValidationError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app.route("/api/v1/stock").post(controller.createStock);
 
   /**
    * @swagger
-   * /stock/:id:
+   * /api/v1/stock/{id}:
    *   patch:
-   *     description: Update a stock register
+   *     summary: Update stock
+   *     description: Updates an existing stock entry
    *     tags: [Stock]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the stock item to update
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               product_id:
+   *                 type: integer
+   *                 description: ID of the product
+   *               store_id:
+   *                 type: integer
+   *                 description: ID of the store
+   *               quantity:
+   *                 type: integer
+   *                 description: Stock quantity
+   *     responses:
+   *       200:
+   *         description: Stock updated successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   example: Stock updated successfully
+   *       400:
+   *         $ref: '#/components/responses/ValidationError'
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
+   *       404:
+   *         $ref: '#/components/responses/NotFoundError'
    */
   app.route("/api/v1/stock/:id").patch(controller.updateStock);
 
   /**
    * @swagger
-   * /stock/:id:
+   * /api/v1/stock/{id}:
    *   delete:
-   *     description: Delete a stock register
+   *     summary: Delete stock
+   *     description: Deletes a stock entry
    *     tags: [Stock]
-   *     produces:
-   *       - application/json
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Numeric ID of the stock item to delete
+   *     responses:
+   *       200:
+   *         description: Stock deleted successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   example: Stock deleted successfully
+   *       401:
+   *         $ref: '#/components/responses/UnauthorizedError'
    */
   app.route("/api/v1/stock/:id").delete(controller.deleteStock);
 };
