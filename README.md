@@ -10,7 +10,7 @@
 
 ###
 
-<p>With the help of AI, I documented the swagger via comments and used it for some unit testing issues such as fixing dates and improving mocks.</p>
+<p>With the help of the AI, I documented the swagger through comments and used it for some testing issues, such as improving mocks, clearing up doubts about how to set certain jest.mocks and the like.</p>
 
 ###
 
