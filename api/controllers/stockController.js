@@ -1,5 +1,4 @@
 const database = require("../../db/models");
-const authentication = require("../utils/authentication");
 const stockValidator = require("../validators/stockValidator");
 
 module.exports = (app) => {
@@ -106,7 +105,7 @@ module.exports = (app) => {
       },
     });
 
-    return res.status(200).send("Stock deleted successfully");
+    return res.status(204).send("Stock deleted successfully");
   };
 
   return controller;

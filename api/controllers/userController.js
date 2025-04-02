@@ -1,6 +1,5 @@
 const database = require("../../db/models");
 const cryptography = require("../utils/cryptography");
-const authentication = require("../utils/authentication");
 const userValidator = require("../validators/userValidator");
 
 module.exports = (app) => {

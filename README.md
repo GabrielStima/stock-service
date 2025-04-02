@@ -2,7 +2,22 @@
 
 ###
 
-<p align="left">This project is intended to be part of my portfolio. With this project, I intend to improve my basic skills in Node.js, creating a stock service. No AI was used ❌</p>
+<p align="left">This project is intended to be part of my portfolio. With this project, I intend to improve my basic skills in Node.js, creating a stock service. AI was used ⚠️</p>
+
+###
+
+<h2 align="left">IA use</h2>
+
+###
+
+<p>With the help of AI, I documented the swagger via comments and used it for some unit testing issues such as fixing dates and improving mocks.</p>
+
+###
+
+<h3 align="left">AI's used</h3>
+
+    "Cursor"
+    "Claude 3.7 Sonnet"
 
 ###
 
@@ -52,7 +67,10 @@
 
 ###
 
-<p align="left"></p>
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "test": "jest --detectOpenHandles",
+    "test:coverage": "jest --coverage"
 
 ###
 
@@ -66,6 +84,8 @@
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" height="40" alt="javascript logo"  />
   <img width="12" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" height="40" alt="sqlite logo"  />
+  <img width="12" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jest/jest-plain.svg" height="40" alt="jest logo"  />
 </div>
 
 ###

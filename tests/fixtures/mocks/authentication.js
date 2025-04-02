@@ -1,7 +1,3 @@
-/**
- * Mock authentication module for testing
- */
-
 const { tokens } = require("../data/auth");
 
 module.exports = {
