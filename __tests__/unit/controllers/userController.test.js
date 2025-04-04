@@ -1,6 +1,4 @@
-jest.mock("../../../db/models", () =>
-  require("../../fixtures/mocks/userDatabase")
-);
+jest.mock("../../../db/models", () => require("../../mocks/userDatabase"));
 jest.mock("../../../api/validators/userValidator", () => ({
   createUser: {
     validate: jest.fn().mockImplementation((data) => {
@@ -191,7 +189,7 @@ const {
   partialUpdateData,
   updatePasswordData,
   invalidUserData,
-} = require("../../fixtures/data/user");
+} = require("../../data/user");
 
 describe("User Controller", () => {
   let req;

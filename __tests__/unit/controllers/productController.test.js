@@ -1,6 +1,4 @@
-jest.mock("../../../db/models", () =>
-  require("../../fixtures/mocks/productDatabase")
-);
+jest.mock("../../../db/models", () => require("../../mocks/productDatabase"));
 jest.mock("../../../api/validators/productValidator", () => ({
   createProduct: {
     validate: jest.fn().mockImplementation((data) => {
@@ -65,7 +63,7 @@ const {
   updateProductData,
   partialUpdateData,
   invalidProductData,
-} = require("../../fixtures/data/product");
+} = require("../../data/product");
 
 describe("Product Controller", () => {
   let req;

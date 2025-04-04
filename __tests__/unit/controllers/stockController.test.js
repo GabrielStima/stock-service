@@ -1,6 +1,4 @@
-jest.mock("../../../db/models", () =>
-  require("../../fixtures/mocks/stockDatabase")
-);
+jest.mock("../../../db/models", () => require("../../mocks/stockDatabase"));
 jest.mock("../../../api/validators/stockValidator", () => ({
   createStock: {
     validate: jest.fn().mockImplementation((data) => {
@@ -115,7 +113,7 @@ const {
   updateStockData,
   partialUpdateData,
   invalidStockData,
-} = require("../../fixtures/data/stock");
+} = require("../../data/stock");
 
 describe("Stock Controller", () => {
   let req;

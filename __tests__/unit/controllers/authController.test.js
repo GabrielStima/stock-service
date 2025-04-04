@@ -10,14 +10,12 @@ jest.mock("config", () => ({
   get: jest.fn().mockReturnValue("test-secret"),
 }));
 
-jest.mock("../../../db/models", () =>
-  require("../../fixtures/mocks/authDatabase")
-);
+jest.mock("../../../db/models", () => require("../../mocks/authDatabase"));
 jest.mock("../../../api/utils/cryptography", () =>
-  require("../../fixtures/mocks/cryptography")
+  require("../../mocks/cryptography")
 );
 jest.mock("../../../api/utils/authentication", () =>
-  require("../../fixtures/mocks/authentication")
+  require("../../mocks/authentication")
 );
 
 const authController = require("../../../api/controllers/authController")();
@@ -29,7 +27,7 @@ const {
   validCredentials,
   invalidCredentials,
   tokens,
-} = require("../../fixtures/data/auth");
+} = require("../../data/auth");
 
 describe("Auth Controller", () => {
   let req;

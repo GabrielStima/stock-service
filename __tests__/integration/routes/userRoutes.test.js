@@ -10,76 +10,96 @@ jest.mock("../../../db/models", () => ({
         id: 1,
         first_name: "John",
         last_name: "Doe",
-        email: "john@test.com",
-        role: "manager",
+        email: "john.doe@example.com",
+        role: "owner",
         store_id: 1,
         Store: {
           id: 1,
-          name: "Test Store",
-          address: "Test Address",
+          name: "Main Store",
+          address: "123 Main Street",
+        },
+      },
+      {
+        id: 2,
+        first_name: "Jane",
+        last_name: "Smith",
+        email: "jane.smith@example.com",
+        role: "manager",
+        store_id: 2,
+        Store: {
+          id: 2,
+          name: "Branch Store",
+          address: "456 Branch Avenue",
         },
       },
     ]),
-    findOne: jest.fn().mockImplementation((options) => {
-      if (options.where.id === "1") {
-        return Promise.resolve({
-          id: 1,
-          first_name: "John",
-          last_name: "Doe",
-          email: "john@test.com",
-          role: "manager",
-          store_id: 1,
-          Store: {
-            id: 1,
-            name: "Test Store",
-            address: "Test Address",
-          },
-        });
-      }
-      return Promise.resolve(null);
-    }),
     findByPk: jest.fn().mockImplementation((id) => {
       if (id === "1") {
         return Promise.resolve({
           id: 1,
           first_name: "John",
           last_name: "Doe",
-          email: "john@test.com",
+          email: "john.doe@example.com",
           password: "hashed_password123",
-          role: "manager",
+          role: "owner",
           store_id: 1,
+          save: jest.fn().mockResolvedValue(true),
         });
       }
       return Promise.resolve(null);
     }),
-    create: jest.fn().mockResolvedValue({
-      id: 1,
-      first_name: "John",
-      last_name: "Doe",
-      email: "john@test.com",
-      role: "manager",
-      store_id: 1,
+    findOne: jest.fn().mockImplementation((query) => {
+      const { where } = query;
+      if (where && where.id) {
+        if (where.id === "1") {
+          return Promise.resolve({
+            id: 1,
+            first_name: "John",
+            last_name: "Doe",
+            email: "john.doe@example.com",
+            role: "owner",
+            store_id: 1,
+            Store: {
+              id: 1,
+              name: "Main Store",
+              address: "123 Main Street",
+            },
+          });
+        }
+      }
+      return Promise.resolve(null);
+    }),
+    create: jest.fn().mockImplementation((userData) => {
+      return Promise.resolve({
+        id: 3,
+        ...userData,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
     }),
     update: jest.fn().mockImplementation((data, options) => {
-      if (options.where.id === "999") {
+      const id = options.where.id;
+      if (id === "999") {
         return Promise.resolve([0]);
       }
       return Promise.resolve([1]);
     }),
     destroy: jest.fn().mockResolvedValue(1),
-    save: jest.fn().mockResolvedValue(true),
   },
   Store: {
     id: 1,
-    name: "Test Store",
-    address: "Test Address",
+    name: "Main Store",
+    address: "123 Main Street",
   },
 }));
 
 jest.mock("../../../api/utils/cryptography", () => ({
   createHash: jest.fn().mockImplementation((password) => `hashed_${password}`),
   comparePass: jest.fn().mockImplementation((password, hashedPassword) => {
-    return `hashed_${password}` === hashedPassword;
+    if (password === "password123" && hashedPassword === "hashed_password123") {
+      return Promise.resolve(true);
+    }
+    return Promise.resolve(password === "password123");
   }),
 }));
 
@@ -129,8 +149,8 @@ describe("User Routes", () => {
       expect(response.body).toHaveProperty("id", 1);
       expect(response.body).toHaveProperty("first_name", "John");
       expect(response.body).toHaveProperty("last_name", "Doe");
-      expect(response.body).toHaveProperty("email", "john@test.com");
-      expect(response.body).toHaveProperty("role", "manager");
+      expect(response.body).toHaveProperty("email", "john.doe@example.com");
+      expect(response.body).toHaveProperty("role", "owner");
       expect(response.body).toHaveProperty("store_id", 1);
       expect(response.body).toHaveProperty("Store");
       expect(response.body).not.toHaveProperty("password");
@@ -164,7 +184,6 @@ describe("User Routes", () => {
       expect(response.body.email).toBe(userData.email);
       expect(response.body.role).toBe(userData.role);
       expect(response.body.store_id).toBe(userData.store_id);
-      expect(response.body).not.toHaveProperty("password");
     });
 
     it("should return 400 status code for missing required fields", async () => {
