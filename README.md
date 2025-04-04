@@ -31,6 +31,15 @@
 
 ###
 
+<h3 align="left">Swagger</h3>
+
+###
+
+<p>This project has Swagger as documentation for the API.</p>
+<p>To view it, simply run the application and access localhost:3000/api-docs in any browser.</p>
+
+###
+
 <h2 align="left">Application</h2>
 
 ###
@@ -39,18 +48,20 @@
 
 ###
 
-    "bcrypt": "^5.1.1",
-    "body-parse": "^0.1.0",
-    "config": "^3.3.12",
-    "consign": "^0.1.6",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "helmet": "^8.1.0",
-    "joi": "^17.13.3",
-    "jsonwebtoken": "^9.0.2",
-    "sequelize": "^6.37.7",
+    "bcrypt": "^5.1.1"
+    "body-parse": "^0.1.0"
+    "config": "^3.3.12"
+    "consign": "^0.1.6"
+    "cors": "^2.8.5"
+    "dotenv": "^16.4.7"
+    "express": "^4.21.2"
+    "helmet": "^8.1.0"
+    "joi": "^17.13.3"
+    "jsonwebtoken": "^9.0.2"
+    "sequelize": "^6.37.7"
     "sqlite3": "^5.1.7"
+    "swagger-jsdoc": "^6.2.8"
+    "swagger-ui-express": "^5.0.1"
 
 ###
 
@@ -58,8 +69,10 @@
 
 ###
 
-    "nodemon": "^3.1.9",
+    "jest": "^29.7.0"
+    "nodemon": "^3.1.9"
     "sequelize-cli": "^6.6.2"
+    "supertest": "^6.3.4"
 
 ###
 
