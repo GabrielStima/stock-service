@@ -31,7 +31,7 @@
 
 ###
 
-<h3 align="left">Swagger</h3>
+<h2 align="left">Swagger</h2>
 
 ###
 
