@@ -63,7 +63,7 @@ module.exports = (app) => {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { first_name, last_name, email, password, role, store_id } = value;
+    const { first_name, last_name, email, password, role_id, store_id } = value;
     const cryptPassword = cryptography.createHash(password);
 
     const user = await database.User.create({
@@ -71,7 +71,7 @@ module.exports = (app) => {
       last_name,
       email,
       password: cryptPassword,
-      role,
+      role_id,
       store_id,
     });
 
@@ -85,7 +85,7 @@ module.exports = (app) => {
     }
 
     const { id } = req.params;
-    const { first_name, last_name, email, password, role, store_id } = value;
+    const { first_name, last_name, email, password, role_id, store_id } = value;
 
     const updateUser = await database.User.update(
       {
@@ -93,7 +93,7 @@ module.exports = (app) => {
         last_name,
         email,
         password,
-        role,
+        role_id,
         store_id,
       },
       {

@@ -11,7 +11,7 @@ jest.mock("../../../db/models", () => ({
         first_name: "John",
         last_name: "Doe",
         email: "john.doe@example.com",
-        role: "owner",
+        role_id: 1,
         store_id: 1,
         Store: {
           id: 1,
@@ -24,7 +24,7 @@ jest.mock("../../../db/models", () => ({
         first_name: "Jane",
         last_name: "Smith",
         email: "jane.smith@example.com",
-        role: "manager",
+        role_id: 1,
         store_id: 2,
         Store: {
           id: 2,
@@ -41,7 +41,7 @@ jest.mock("../../../db/models", () => ({
           last_name: "Doe",
           email: "john.doe@example.com",
           password: "hashed_password123",
-          role: "owner",
+          role_id: 1,
           store_id: 1,
           save: jest.fn().mockResolvedValue(true),
         });
@@ -57,7 +57,7 @@ jest.mock("../../../db/models", () => ({
             first_name: "John",
             last_name: "Doe",
             email: "john.doe@example.com",
-            role: "owner",
+            role_id: 1,
             store_id: 1,
             Store: {
               id: 1,
@@ -121,7 +121,7 @@ describe("User Routes", () => {
       expect(response.body[0]).toHaveProperty("first_name");
       expect(response.body[0]).toHaveProperty("last_name");
       expect(response.body[0]).toHaveProperty("email");
-      expect(response.body[0]).toHaveProperty("role");
+      expect(response.body[0]).toHaveProperty("role_id");
       expect(response.body[0]).toHaveProperty("store_id");
       expect(response.body[0]).toHaveProperty("Store");
       expect(response.body[0]).not.toHaveProperty("password");
@@ -150,7 +150,7 @@ describe("User Routes", () => {
       expect(response.body).toHaveProperty("first_name", "John");
       expect(response.body).toHaveProperty("last_name", "Doe");
       expect(response.body).toHaveProperty("email", "john.doe@example.com");
-      expect(response.body).toHaveProperty("role", "owner");
+      expect(response.body).toHaveProperty("role_id", 1);
       expect(response.body).toHaveProperty("store_id", 1);
       expect(response.body).toHaveProperty("Store");
       expect(response.body).not.toHaveProperty("password");
@@ -171,7 +171,7 @@ describe("User Routes", () => {
         last_name: "Doe",
         email: "john@test.com",
         password: "password123",
-        role: "manager",
+        role_id: 1,
         store_id: 1,
       };
 
@@ -182,7 +182,7 @@ describe("User Routes", () => {
       expect(response.body.first_name).toBe(userData.first_name);
       expect(response.body.last_name).toBe(userData.last_name);
       expect(response.body.email).toBe(userData.email);
-      expect(response.body.role).toBe(userData.role);
+      expect(response.body.role_id).toBe(userData.role_id);
       expect(response.body.store_id).toBe(userData.store_id);
     });
 
@@ -201,7 +201,7 @@ describe("User Routes", () => {
         last_name: "Doe",
         email: "invalid-email",
         password: "password123",
-        role: "manager",
+        role_id: 1,
       });
 
       expect(response.status).toBe(400);
@@ -214,7 +214,7 @@ describe("User Routes", () => {
         last_name: "Doe",
         email: "jane@test.com",
         password: "short",
-        role: "manager",
+        role_id: 1,
       });
 
       expect(response.status).toBe(400);
@@ -228,7 +228,7 @@ describe("User Routes", () => {
         first_name: "Jane",
         last_name: "Smith",
         email: "jane@test.com",
-        role: "admin",
+        role_id: 1,
         store_id: 2,
       };
 

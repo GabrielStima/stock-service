@@ -36,7 +36,7 @@ module.exports = {
     name: "Test User",
     email: "test@example.com",
     password: "$2b$10$X/XZCh3VdBL.P8D.86B7O.D9D7/uPGJ/Z/CFTnUOl0tdQxFwm1R.u",
-    role: "manager",
+    role_id: 1,
     store_id: 1,
     createdAt: "2023-01-01T00:00:00.000Z",
     updatedAt: "2023-01-01T00:00:00.000Z",

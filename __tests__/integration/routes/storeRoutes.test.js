@@ -16,7 +16,7 @@ jest.mock("../../../db/models", () => ({
           first_name: "John",
           last_name: "Doe",
           email: "john@test.com",
-          role: "manager",
+          role_id: 1,
         },
       },
     ]),
@@ -32,7 +32,7 @@ jest.mock("../../../db/models", () => ({
             first_name: "John",
             last_name: "Doe",
             email: "john@test.com",
-            role: "manager",
+            role_id: 1,
           },
         });
       }
@@ -57,7 +57,7 @@ jest.mock("../../../db/models", () => ({
     first_name: "John",
     last_name: "Doe",
     email: "john@test.com",
-    role: "manager",
+    role_id: 1,
   },
 }));
 

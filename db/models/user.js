@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsTo(models.Store, {
         foreignKey: "store_id",
+        foreignKey: "role_id",
         targetKey: "id",
       });
     }
@@ -20,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       last_name: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      role: DataTypes.STRING,
+      role_id: DataTypes.INTEGER,
       store_id: DataTypes.INTEGER,
     },
     {

@@ -5,7 +5,7 @@ const users = [
     last_name: "Doe",
     email: "john.doe@example.com",
     password: "hashed_password_1",
-    role: "owner",
+    role_id: 1,
     store_id: 1,
     createdAt: "2024-03-31T00:00:00.000Z",
     updatedAt: "2024-03-31T00:00:00.000Z",
@@ -21,7 +21,7 @@ const users = [
     last_name: "Smith",
     email: "jane.smith@example.com",
     password: "hashed_password_2",
-    role: "manager",
+    role_id: 1,
     store_id: 2,
     createdAt: "2024-03-31T00:00:00.000Z",
     updatedAt: "2024-03-31T00:00:00.000Z",
@@ -40,7 +40,7 @@ const validUserData = {
   last_name: "Johnson",
   email: "alice.johnson@example.com",
   password: "securepass123",
-  role: "employee",
+  role_id: 1,
   store_id: 1,
 };
 
@@ -49,7 +49,7 @@ const updateUserData = {
   last_name: "Doe Updated",
   email: "john.doe.updated@example.com",
   password: "newsecurepass123",
-  role: "manager",
+  role_id: 1,
   store_id: 2,
 };
 
@@ -70,7 +70,7 @@ const invalidUserData = {
     "This is a very long last name that exceeds the maximum length of 25 characters",
   email: "invalid-email",
   password: "short", // Too short
-  role: "This is a very long role that exceeds the maximum length of 25 characters",
+  role_id: "not-a-number",
   store_id: "not-a-number",
 };
 

@@ -10,7 +10,7 @@ const stores = [
       id: 1,
       name: "John Doe",
       email: "john@example.com",
-      role: "owner",
+      role_id: 1,
     },
   },
   {
@@ -24,7 +24,7 @@ const stores = [
       id: 2,
       name: "Jane Smith",
       email: "jane@example.com",
-      role: "owner",
+      role_id: 1,
     },
   },
 ];

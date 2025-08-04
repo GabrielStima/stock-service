@@ -108,6 +108,30 @@ const options = {
             },
           },
         },
+        Role: {
+          type: "object",
+          properties: {
+            id: {
+              type: "integer",
+              format: "int64",
+              example: 1,
+            },
+            name: {
+              type: "string",
+              example: "Admin",
+            },
+            createdAt: {
+              type: "string",
+              format: "date-time",
+              example: "2023-01-01T00:00:00Z",
+            },
+            updatedAt: {
+              type: "string",
+              format: "date-time",
+              example: "2023-01-01T00:00:00Z",
+            },
+          },
+        },
         Product: {
           type: "object",
           properties: {
@@ -186,10 +210,10 @@ const options = {
               format: "email",
               example: "john@example.com",
             },
-            role: {
-              type: "string",
-              enum: ["admin", "manager", "employee"],
-              example: "manager",
+            role_id: {
+              type: "integer",
+              format: "int64",
+              example: 1,
             },
             store_id: {
               type: "integer",

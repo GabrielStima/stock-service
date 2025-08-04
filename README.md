@@ -25,9 +25,7 @@
 
 ###
 
-<p align="left">To develop this API, I imagined the following situation:<br><br><i>A small company contacted me to develop an inventory system for them.</i><br><i>The company has more than one physical store, franchise-style, and its stock must be visible between stores.</i><br><i>To use this system, it is also necessary to have a login.</i><br><br>With this in mind, the following diagram was created:</p>
-
-![](./image/er.png)
+<p align="left">To develop this API, I imagined the following situation:<br><br><i>A small company contacted me to develop an inventory system for them.</i><br><i>The company has more than one physical store and its stock must be visible between stores.</i><br><i>To use this system, it is also necessary to have a login.</i><br><br></p>
 
 ###
 

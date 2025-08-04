@@ -116,11 +116,10 @@ module.exports = (app) => {
    *                 type: string
    *                 format: password
    *                 description: User's password
-   *               role:
-   *                 type: string
-   *                 enum: [admin, manager, employee]
+   *               role_id:
+   *                 type: integer
    *                 description: User's role
-   *                 example: "manager"
+   *                 example: 1
    *               store_id:
    *                 type: integer
    *                 description: ID of the store the user belongs to
@@ -166,9 +165,8 @@ module.exports = (app) => {
    *                 type: string
    *                 format: email
    *                 description: User's email address
-   *               role:
-   *                 type: string
-   *                 enum: [admin, manager, employee]
+   *               role_id:
+   *                 type: integer
    *                 description: User's role
    *               store_id:
    *                 type: integer

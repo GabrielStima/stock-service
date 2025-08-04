@@ -7,7 +7,7 @@ jest.mock("../../../api/validators/userValidator", () => ({
         !data.last_name ||
         !data.email ||
         !data.password ||
-        !data.role
+        !data.role_id
       ) {
         return {
           error: {
@@ -44,14 +44,14 @@ jest.mock("../../../api/validators/userValidator", () => ({
           },
         };
       }
-      if (data.role.length > 25) {
+      if (
+        data.role_id !== undefined &&
+        (typeof data.role_id !== "number" || !Number.isInteger(data.role_id))
+      ) {
         return {
           error: {
             details: [
-              {
-                message:
-                  "Validation error: role must be less than or equal to 25 characters",
-              },
+              { message: "Validation error: role_id must be an integer" },
             ],
           },
         };
@@ -119,14 +119,14 @@ jest.mock("../../../api/validators/userValidator", () => ({
           },
         };
       }
-      if (data.role !== undefined && data.role.length > 25) {
+      if (
+        data.role_id !== undefined &&
+        (typeof data.role_id !== "number" || !Number.isInteger(data.role_id))
+      ) {
         return {
           error: {
             details: [
-              {
-                message:
-                  "Validation error: role must be less than or equal to 25 characters",
-              },
+              { message: "Validation error: role_id must be an integer" },
             ],
           },
         };
